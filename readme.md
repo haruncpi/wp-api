@@ -28,10 +28,17 @@ ApiConfig::set_route_file( __DIR__ . '/api-routes.php' )
 
 Open `api-routes.php` file and write route
 
+Syntax
+```php
+ApiRoute::get( $prefix, $endpoint, $callback, $auth = false );
+ApiRoute::post( $prefix, $endpoint, $callback, $auth = false );
+```
+
+Example
 ```php
 ApiRoute::get( 'myplugin/v1', '/me', 'ApiController@me' );
 ```
-You can pass another callback to check auth
+Secure route
 ```php
 ApiRoute::get( 'myplugin/v1', '/me', 'ApiController@me', 'AuthController@check' );
 ```
