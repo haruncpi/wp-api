@@ -32,7 +32,19 @@ Syntax
 ```php
 ApiRoute::get( $prefix, $endpoint, $callback, $auth = false );
 ApiRoute::post( $prefix, $endpoint, $callback, $auth = false );
+
+// Multiple route in a prefix group.
+ApiRoute::prefix( $prefix, function( ApiRoute $route ) {
+    $route->get( $endpoint, $callback, $auth = false );
+    $route->post( $endpoint, $callback, $auth = false );
+});
 ```
+Where
+- `$prefix` is your plugin name with api version.
+Example: `myplugin/v1`
+- By default, `$auth` is false means the endpoint can be access without authentication.
+- To make a endpoint `secure` pass a callback in the place of `$auth`
+
 
 Example
 ```php
