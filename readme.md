@@ -88,3 +88,6 @@ ApiRoute::prefix( 'myplugin/v1', function( ApiRoute $route ) {
     $route->post( '/logout', 'ApiController@logout' );
 })->auth( 'AuthController@check' );
 ```
+
+### Plugin Example
+[API Plugin](https://github.com/haruncpi/api-plugin) is a WordPress example plugin for this composer package.
