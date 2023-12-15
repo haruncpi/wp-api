@@ -134,13 +134,19 @@ class ApiRoute {
 	 * @return array
 	 */
 	private function prepare_route_data( $method, $prefix, $endpoint, $callback, $auth = false ) {
-		return array(
+		$data = array(
 			'prefix'   => $prefix,
 			'method'   => $method,
 			'endpoint' => $endpoint,
 			'callback' => $callback,
 			'auth'     => $auth,
 		);
+
+		if ( isset( $this->current['group'] ) ) {
+			$data['group'] = $this->current['group'];
+		}
+
+		return $data;
 	}
 
 	/**
@@ -243,6 +249,7 @@ class ApiRoute {
 		}
 
 		$this->current['prefix'] = $name;
+		$this->current['group']  = microtime( true ) * 1000 + wp_rand( 0, 999 );
 
 		/**
 		 * The invokation of $callback must be under prefix set.
@@ -266,11 +273,21 @@ class ApiRoute {
 		$target_prefix = $this->current['prefix'];
 		foreach ( self::$routes as &$prefix ) {
 			foreach ( $prefix as &$route ) {
-				// The authorization callback is overridden only when no existing authorization callback has been registered.
-				if ( $target_prefix === $route['prefix'] && empty( $route['auth'] ) ) {
+				/**
+				 * The authorization callback is overridden
+				 * only when no previous auth callback has been registered.
+				 */
+				if ( isset( $this->current['group'] )
+					&& $this->current['group'] === $route['group']
+					&& $target_prefix === $route['prefix']
+					&& empty( $route['auth'] ) ) {
 					$route['auth'] = $callback;
 				}
 			}
+		}
+
+		if ( isset( $this->current['group'] ) ) {
+			unset( $this->current['group'] );
 		}
 	}
 
